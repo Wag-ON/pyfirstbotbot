@@ -11,5 +11,5 @@ Bots cooked:
 @fxswap_bot;
 @gdgdevbot;
 
-Enjoy cooking with <a href = 'https://github.com/VadimCpp/myfirstbotbot'>this template</a>!""".format(first_name)
+Enjoy cooking with <a href = 'https://github.com/LimiO/TutorialHeroku'>this template</a>!""".format(first_name)
 	return text
