@@ -1,4 +1,4 @@
-TOKEN = '829333255:AAH7B6hqC6IAaNqaw6b0QhylKx_sNq7Styc'
+TOKEN = '829333255:AAGVbO2vDSrVPugVVvnnkzBdaFXIPPyL0YY'
 
 def autosending_text(bot, message):
 	first_name = bot.get_chat(message.chat.id).first_name
