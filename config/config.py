@@ -1,3 +1,6 @@
+#
+# <irony> тудым-сюдым @LimiO_ananas спасибо за то, что хранишь токен в открытом виде </irony>
+#
 TOKEN = '829333255:AAGVbO2vDSrVPugVVvnnkzBdaFXIPPyL0YY'
 
 def autosending_text(bot, message):
