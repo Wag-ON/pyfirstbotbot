@@ -5,7 +5,7 @@ from config import *
 logging.basicConfig(level  = logging.DEBUG, 
                     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')  #Ну это по классике, логи
 
-bot = telebot.TeleBot(TOKEN) #Создает объект класса "TeleBot", то есть нашего бота 
+bot = telebot.TeleBot(Config.TOKEN) #Создает объект класса "TeleBot", то есть нашего бота 
 
 
 
