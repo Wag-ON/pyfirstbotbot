@@ -1,6 +1,6 @@
 import telebot
 import logging
-from config.config import *
+from config import *
 
 logging.basicConfig(level  = logging.DEBUG, 
                     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')  #Ну это по классике, логи
