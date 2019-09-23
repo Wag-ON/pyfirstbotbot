@@ -16,7 +16,7 @@ bot = telebot.TeleBot(Config.BOT_TOKEN)  # Создает объект клас�
                    'pinned_message'])  # декоратор который заставляет пользователя реагировать на новые сообщения
 def sending_auto2(message):
     bot.send_message(chat_id=message.chat.id, text=autosending_text(bot, message), parse_mode='html',
-                     disable_web_page_preview=False)  # Отправляет авто сообщение
+                     disable_web_page_preview=True)  # Отправляет авто сообщение
 
 
 if __name__ == '__main__':
