@@ -43,6 +43,7 @@ URL = Config.URL
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # Ну это по классике, логи
+logger = logging.getLogger()
 
 bot = telebot.TeleBot(Config.BOT_TOKEN)  # Создает объект класса "TeleBot", то есть нашего бота
 def init_server():
