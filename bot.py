@@ -121,8 +121,7 @@ def printSchedule(bot, message, groupNo):
 def sending_auto2(message):
 
     printSchedule(bot, message, message.text)
-    #bot.send_message(chat_id=message.chat.id, text=autosending_text(bot, message), parse_mode='html',
-                     disable_web_page_preview=True)  # Отправляет авто сообщение
+    #bot.send_message(chat_id=message.chat.id, text=autosending_text(bot, message), parse_mode='html',disable_web_page_preview=True)  # Отправляет авто сообщение
 
     # NOTE
     # Не отправляем сообщения в общие чаты.
