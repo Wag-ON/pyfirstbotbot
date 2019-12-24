@@ -6,7 +6,7 @@ dotenv.load_dotenv()
 class Config:
     MODE = os.getenv('MODE')
     BOT_TOKEN = os.getenv('BOT_TOKEN')
-    URL = os.getenv('HEROKU_URL')
+    URL = os.getenv('URL')
 
 
 def autosending_text(bot, message):
