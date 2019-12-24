@@ -1,16 +1,18 @@
 import os
-
+import dotenv
 from telebot.types import InlineKeyboardButton
 
-
+dotenv.load_dotenv()
 class Config:
-    BOT_TOKEN = os.environ['BOT_TOKEN']
+    MODE = os.getenv('MODE')
+    BOT_TOKEN = os.getenv('BOT_TOKEN')
+    URL = os.getenv('HEROKU_URL')
 
 
 def autosending_text(bot, message):
     first_name = bot.get_chat(message.chat.id).first_name
     text = """Привет, {0}
-Ну вот мы и запустили неофициального бота БФУ.
+Это попытка модифицировать неофициального бота БФУ.
 Вся разработка ведется в чате @frontendbasics.
-А пока запасайтесь попкорном 🍿""".format(first_name)
+Все что не делается - все к лучшему""".format(first_name)
     return text

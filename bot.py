@@ -2,39 +2,66 @@ import telebot
 import logging
 import json
 from config import *
-from firebase import firebase
+#from firebase import firebase
+
+from flask import Flask, request
+
+MODE = Config.MODE
+TOKEN = Config.BOT_TOKEN
+URL = Config.URL
+
 
 # FireBase Account:
 # Login: bfubot123@gmail.com
 # Password: Firdu8-jantih-tanxon
-firebase = firebase.FirebaseApplication("https://bfubot.firebaseio.com/", None)
+
 # NOTE
 # old jsonString
 #jsonString = '{ "Group": "MO-2", "TimeTable":{"Day":[ {"DayName":"Вторник", "time": "15-20","Cab": "(ауд. 231)", "Lesson": "лекция Python"}, {"DayName":"Среда", "Подгруппа": [{"Номер":"(2я подгруппа)", "time":"10-10", "Cab":"(ауд. 235)",  "Lesson": "лаба Python"}, {"Номер":"(3я подгруппа)","time":"12-00", "Cab": "(ауд. 235)", "Lesson":"лаба Python"}, {"Номер":"(1я подгруппа)", "time":"13-40", "Cab":"(ауд. 230)", "Lesson": "лаба Python"} ]} ]} }'
-jsonString_pm4='{ "Group": "ПМ-4", "TimeTable":{"Day":[  {"DayName":"Пятница", "Подгруппа":[{"Номер":"(1я подгруппа)", "time":"10-10", "Cab":"(ауд. 230А. Вход через 230 ауд.)", "Lesson": "лаба Python"},{"time":"12-00", "Cab":"(ауд.118)", "Lesson": "лекция Python"},{"Номер":"(2я подгруппа)", "time":"13-40", "Cab":"(ауд. 214)", "Lesson": "лаба Python"} ]} ]} }'
 
-result = firebase.get('/bfubot/Schedule', '')
-result = str(result)
-count = 0
-j = 0
-i = 0
-while count < 3:
-    if result[i] == "'":
-        count += 1
-        j = i + 1
-    i += 1
-l = int(len(result) - 2)
-result = result[:l] + ''
-result = '' + result[j:]
-jsonString = result
+# firebase = firebase.FirebaseApplication("https://bfubot.firebaseio.com/", None)
+# jsonString_pm4='{ "Group": "ПМ-4", "TimeTable":{"Day":[  {"DayName":"Пятница", "Подгруппа":[{"Номер":"(1я подгруппа)", "time":"10-10", "Cab":"(ауд. 230А. Вход через 230 ауд.)", "Lesson": "лаба Python"},{"time":"12-00", "Cab":"(ауд.118)", "Lesson": "лекция Python"},{"Номер":"(2я подгруппа)", "time":"13-40", "Cab":"(ауд. 214)", "Lesson": "лаба Python"} ]} ]} }'
+# result = firebase.get('/bfubot/Schedule', '')
+# result = str(result)
+# count = 0
+# j = 0
+# i = 0
+# while count < 3:
+#     if result[i] == "'":
+#         count += 1
+#         j = i + 1
+#     i += 1
+# l = int(len(result) - 2)
+# result = result[:l] + ''
+# result = '' + result[j:]
+# jsonString = result
+#
+# obj = json.loads(jsonString)
+# obj_pm4 =json.loads(jsonString_pm4)
 
-obj = json.loads(jsonString)
-obj_pm4 =json.loads(jsonString_pm4)
+
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # Ну это по классике, логи
 
 bot = telebot.TeleBot(Config.BOT_TOKEN)  # Создает объект класса "TeleBot", то есть нашего бота
+def init_server():
+	server = Flask(__name__)
+
+	# Инициализирует webhook
+	@server.route("/")
+	def webhook():
+		bot.remove_webhook()
+		bot.set_webhook(url=URL + TOKEN)
+		return "!", 200
+
+	# Обработывает события
+	@server.route('/' + TOKEN, methods=['POST'])
+	def getMessage():
+		bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+		return "!", 200
+
+	return server
 
 def printSchedule(bot, message, groupNo):
 
@@ -92,8 +119,9 @@ def printSchedule(bot, message, groupNo):
 
 def sending_auto2(message):
 
-    printSchedule(bot, message, message.text)
-
+    #printSchedule(bot, message, message.text)
+    bot.send_message(chat_id=message.chat.id, text=autosending_text(bot, message), parse_mode='html',
+                     disable_web_page_preview=True)  # Отправляет авто сообщение
 
     # NOTE
     # Не отправляем сообщения в общие чаты.
@@ -102,4 +130,11 @@ def sending_auto2(message):
 #sending_auto2(message)
 
 if __name__ == '__main__':
-    bot.polling()  # Заставляет бота получать уведомления о новых сообщениях
+    logging.info("Selected mode " + MODE)
+    if MODE == "debug":
+        bot.remove_webhook()
+        bot.polling() # Заставляет бота получать уведомления о новых сообщениях
+    else:
+		# Сервер необходим для работы webhook
+        server = init_server()
+        server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
